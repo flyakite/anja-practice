@@ -8,9 +8,8 @@ mod.TodoCtrl = <[$scope $location angularFire filterFilter]> ++ (s, $location, a
   s.editTodo = null
   if $location.path! is ''
     $location.path '/'
-  s <<< {$location}
+  s.location = $location
 
-  s.d = 6
   promise.then (todos)->
     console.log s.todos
     startWatch(s, filterFilter)
@@ -22,8 +21,7 @@ startWatch = (s, filter) ->
     s.completedCount = s.todos.length - s.remainingCount
     s.allChecked = !s.remainingCount
   , true)
-  s.d = 5
-  s.$watch '$location.path()', (path) ->
+  s.$watch 'location.path()', (path) ->
     s.statusFilter = switch path
       case \/active
          completed: false
