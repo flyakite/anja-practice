@@ -1,0 +1,83 @@
+!!! 5
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+    meta(name='viewport', content='width=device-width')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title(ng-bind-template='{{pageTitle}}')
+    link(rel='stylesheet', href='/css/vendor.css')
+    link(rel='stylesheet', href='/css/app.css')
+    //-script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+    //if lte IE 7
+      script(src='http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js')
+    //if lte IE 8
+      script(src='//html5shiv.googlecode.com/svn/trunk/html5.js')
+    script.
+      window.brunch = window.brunch || {};
+      window.brunch['auto-reload'] = {
+        enabled: true
+      };
+    script(src='https://cdn.firebase.com/v0/firebase.js')
+    script(src='/js/vendor.js')
+    script(src='/js/app.js')
+  body.metrouicss(ng-controller='TodoCtrl')
+    .page
+      .nav-bar
+        .nav-bar-inner.padding10
+          span.pull-menu
+          a(href='/') 
+            span.element.brand
+              span Angular Brunch Seed 
+              small 0.1.1
+          .divider
+
+    .page.secondary 
+      .page-header 
+        .page-header-content
+          h1 Todos
+            small demo
+      .page-region
+        .page-region-content#todoapp
+          .grid
+            .row
+              header
+                h1 todos
+              form#todo-form(ng-submit="addTodo()")
+                input#new-todo(placehoder="What needs to be done?", ng-model="newTodo", autofocus)
+          .grid
+            .row
+              section#main(ng-show="todos.length", ng-cloak)
+                input#toggle-all(type="checkbox", ng-model="allChecked", ng-click="markAll(allChecked)")
+                label(for="toggle-all") Mark all as completed
+                ul#todo-list
+                  li(ng-repeat="todo in todos | filter:statusFilter", 
+                    ng-class="{completed: todo.completed, editing: todo==editedTodo}")
+                    .view
+                      input.toggle(type="checkbox", ng-model="todo.completed")
+                      label(ng-dbclick="editTodo(todo)") {{todo.title}}
+                      button.destroy(ng-click="removeTodo(todo)") Remove
+                    form(ng-submit="doneEditing(todo)")
+                      input.edit(ng-model="todo.title", todo-blur="doneEditing(todo)", todo-focus="todo == editedTodo")
+              footer#footer(ng-show="todos.length", ng-cloak)
+                span#todo-count
+                  strong {{remainingCount}}
+                  ng-pluralize(count="remainingCount", when="{one:'item left', other:'items left'}")
+                ul#filters
+                  li
+                    a(href="#/", ng-class="{selected: location.path() == '/'}") All
+                  li
+                    a(href="#/active", ng-class="{selected: location.path() == '/active'}") Active
+                  li
+                    a(href="#/completed", ng-class="{selected: location.path() == '/completed'}") Completed
+                button#clear-completed(ng-click="clearCompletedTodos()", ng-show="completedCount") 
+                  | Clear Completed ({{completedCount}})
+
+    footer.page
+      .nav-bar
+        .nav-bar-inner.padding10
+          .element
+            a.fg-color-white(href='https://github.com/flyakite/angular-brunch-seed') angular-brunch-seed | source
+          .element
+            a.fg-color-white(href='http://metroui.org.ua') Metro UI CSS
